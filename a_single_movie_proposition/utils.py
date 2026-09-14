@@ -1,7 +1,6 @@
 import requests
 import ast
-
-
+import random
 
 api_key = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2YzUzM2U3NWFhNmM5MWZhMTg0MjBmMDczMDMwZTIyZCIsIm5iZiI6MTc4ODA4NDk5NS4xMiwic3ViIjoiNmE5NDAzMDM2NzkwYjY3NDFkZGQxNjQxIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.1YaqCF0SwU4ZZlh2cITcTyaZ4EZYF2ZG51FtB8JhiqE"
 
@@ -75,7 +74,7 @@ def lower_dict(d):
     return new_dict
 
 
-clean_genre_dict_lower = lower_dict(clean)
+clean_genre_dict_lower = lower_dict(clean_dict_genre)
 
 
 # # avoir la liste avec les id de tout les films dasn tel catagegoris puis tirer au hhasrad un id 
@@ -103,14 +102,46 @@ id =choice_genre()
 
 def display_selection_movie (id):
 
-    url = f"https://api.themoviedb.org/3/discover/movie?with_genres={id}"
+     headers = {
+    "accept": "application/json",
+    "Authorization": f"Bearer {api_key}" } 
 
-    request_api_id()
-    responses = requests.get(urle, headers=headers)
-    return responses.text
+     url = f"https://api.themoviedb.org/3/discover/movie?with_genres={id}&language=fr-FR"
+     request_api_id()
+     responses = requests.get(url, headers=headers)
+
+     responses = responses.json()
+     dict_movie = responses
+     return dict_movie
 
 
-print(display_selection_movie(id))
-    
+
+
+
+dict_movie_selection = display_selection_movie(id)
+
+number_total_of_page = dict_movie_selection["total_results"]
+
+
+
+
+def random_movie(nbr_p):
+     
+    headers = {
+    "accept": "application/json",
+    "Authorization": f"Bearer {api_key}" } 
+
+    random_page= random.randint(1, nbr_p)
+    url = f"https://api.themoviedb.org/3/discover/movie?with_genres={id}&language=fr-FR&page={random_page}"
+    responses = requests.get(url, headers=headers)
+
+    responses = responses.json()
+    dict_movie = responses
+
+    random_ = random.randint(1, len(dict_movie))
+    selection = list(dict_movie.values())[random_ - 1]
+    return selection
+ 
+print(random_movie(number_total_of_page))
 
 
