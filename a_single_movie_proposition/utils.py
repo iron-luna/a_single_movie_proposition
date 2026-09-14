@@ -122,26 +122,27 @@ dict_movie_selection = display_selection_movie(id)
 
 number_total_of_page = dict_movie_selection["total_results"]
 
+print(number_total_of_page)
+print(dict_movie_selection)
 
 
-
-def random_movie(nbr_p):
+# def random_movie(nbr_p):
      
-    headers = {
-    "accept": "application/json",
-    "Authorization": f"Bearer {api_key}" } 
+#     headers = {
+#     "accept": "application/json",
+#     "Authorization": f"Bearer {api_key}" } 
 
-    random_page= random.randint(1, nbr_p)
-    url = f"https://api.themoviedb.org/3/discover/movie?with_genres={id}&language=fr-FR&page={random_page}"
-    responses = requests.get(url, headers=headers)
+#     random_page= random.randint(1, nbr_p)
+#     url = f"https://api.themoviedb.org/3/discover/movie?with_genres={id}&language=fr-FR&page={random_page}"
+#     responses = requests.get(url, headers=headers)
 
-    responses = responses.json()
-    dict_movie = responses
+#     responses = responses.json()
+#     dict_movie = responses
 
-    random_ = random.randint(1, len(dict_movie))
-    selection = list(dict_movie.values())[random_ - 1]
-    return selection
+#     random_ = random.randint(1, len(dict_movie))
+#     selection = list(dict_movie.values())[random_ - 1]
+#     return selection
  
-print(random_movie(number_total_of_page))
+# print(random_movie(number_total_of_page))
 
 
