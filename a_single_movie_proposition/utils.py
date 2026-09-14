@@ -5,111 +5,112 @@ import ast
 
 api_key = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2YzUzM2U3NWFhNmM5MWZhMTg0MjBmMDczMDMwZTIyZCIsIm5iZiI6MTc4ODA4NDk5NS4xMiwic3ViIjoiNmE5NDAzMDM2NzkwYjY3NDFkZGQxNjQxIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.1YaqCF0SwU4ZZlh2cITcTyaZ4EZYF2ZG51FtB8JhiqE"
 
-url = "https://api.themoviedb.org/3/authentication"
+def request_api_id ():
 
-headers = {
+    url = "https://api.themoviedb.org/3/authentication"
+
+    headers = {
     "accept": "application/json",
     "Authorization": f"Bearer {api_key}"
-}
-response = requests.get(url, headers=headers)
+    }
+    response = requests.get(url, headers=headers)
+    return response.text
 
+
+request_api_id()
 
 
 # requete qui renvoie tout les genres cinématographiques
 
-url = "https://api.themoviedb.org/3/genre/movie/list?language=en"
+def dict_movie_genre_id():
 
-headers = {
-    "accept": "application/json",
-    "Authorization":  f"Bearer {api_key}"
-}
-response = requests.get(url, headers=headers)
 
-# convert  response : class = str into  Dict
+    url = "https://api.themoviedb.org/3/genre/movie/list?language=en"
 
-response = response.text
-response = ast.literal_eval(response)
+    headers = {
+        "accept": "application/json",
+        "Authorization":  f"Bearer {api_key}"
+    }
+    response = requests.get(url, headers=headers)
 
-dict_genre = response 
+    # convert  response : class = str into  Dict
 
-list_genre = [""]
-genre_list =[]
-dict_genre_id= {}
+    response = response.text
+    response = ast.literal_eval(response)
+
+    dict_genre = response 
+    return dict_genre
+
+
+version_1_dict = dict_movie_genre_id()
 
 #nettoyage pour ne garder que la liste des genres et un dictionnaire comprenant comme valeur l id du genre:
 
-for key in dict_genre : 
-    for value in dict_genre[key]:
-        value = str(value)
-        value=value.split("'")
-        dict_genre_id.update({value[5] : value[2]})
-        genre_list.append(value[5])
+def clean_dict(dict):
+    dict_temporary = {}
+    dict_genre_id ={}
+    value = str
+    for key in dict : 
+        for value in dict[key]:
+            value = str(value)
+            value=value.split("'")
+            dict_temporary.update({value[5] : value[2]})
+            dict_movie_genre_id = dict_temporary
 
+
+    for key in dict_temporary: # garder dans la valeur de la clés que le nbr (filtrer les autre caractere)
+        value  =  "".join([char for char in dict_temporary[key] if char.isdigit()])
+        value = int(value)
+        dict_movie_genre_id.update({key: value})
+
+    return dict_movie_genre_id
+
+
+clean_dict_genre = clean_dict(version_1_dict)
 
 # function qui met tout les clés en minuscules
 
 def lower_dict(d):
-    new_dict = dict((k.lower(), v.lower()) for k, v in d.items())
+    new_dict = dict((k.lower(), v) for k, v in d.items())
     return new_dict
 
 
-dict_genre_id = lower_dict(dict_genre_id)
-
-# normalisation de la list (enleve les minuscules)
-
-genre_list= str(genre_list)
-genre_list = genre_list.lower()
-genre_list = genre_list.replace("'" , "")
-genre_list = genre_list.replace("[" , "")
-genre_list = genre_list.replace("]" , "")
-genre_list = genre_list.replace(" ","")
-genre_list = genre_list.split(",")
-genre_list[14]= "science fiction"
-genre_list[15]= "tv movie"
+clean_genre_dict_lower = lower_dict(clean)
 
 
-# avoir la liste avec les id de tout les films dasn tel catagegoris puis tirer au hhasrad un id 
-
-choice_genre = input(f"write the type of movie you want to watch : \n  {genre_list} \n")
+# # avoir la liste avec les id de tout les films dasn tel catagegoris puis tirer au hhasrad un id 
 
 
 
-# permet de determiner le numero du genre (id)
-def determine_id (choice_genre):
-    cpt= 0
-    for w in genre_list :
-        print(genre_list[cpt])
-        if choice_genre != genre_list[cpt]:
-            cpt+=1
-        else:
-            x= dict_genre_id.get(genre_list[cpt])
-            x=x.replace(":","")
-            x=x.replace(",","")
-            return x
-    return "pas dans la genre_list"
+def choice_genre ():
 
- 
-id=determine_id(choice_genre)
+    for key in clean_genre_dict_lower :
+        print(key)
+        print("\n")
+    choice_genre = input("write the type of movie you want to watch : \n ")
 
-print(id)
+    # permet de determiner le numero du genre (id)
+    try:
+        id = clean_genre_dict_lower [choice_genre]
+        return id
 
-
-
-
-# urle= f"https://api.themoviedb.org/3/discover/movie?with_genres={determine_id(choice_genre)}"
-
-# headers = {
-#     "accept": "application/json",
-#     "Authorization":  f"Bearer {api_key}"
-# }
-        
-# responses = requests.get(urle, headers=headers)
-
-
-
-# print(responses.text)
+    except KeyError:
+        id = None
+        print(" Genre non trouver dans la liste , erreur lors de la saisie : recommancer ")
         
 
+id =choice_genre()
 
+def display_selection_movie (id):
+
+    url = f"https://api.themoviedb.org/3/discover/movie?with_genres={id}"
+
+    request_api_id()
+    responses = requests.get(urle, headers=headers)
+    return responses.text
+
+
+print(display_selection_movie(id))
+    
 
 
