@@ -41,7 +41,7 @@ def dict_movie_genre_id():
     return dict_genre
 
 
-version_1_dict = dict_movie_genre_id()
+
 
 #nettoyage pour ne garder que la liste des genres et un dictionnaire comprenant comme valeur l id du genre:
 
@@ -65,7 +65,7 @@ def clean_dict(dict):
     return dict_movie_genre_id
 
 
-clean_dict_genre = clean_dict(version_1_dict)
+
 
 # function qui met tout les clés en minuscules
 
@@ -74,14 +74,14 @@ def lower_dict(d):
     return new_dict
 
 
-clean_genre_dict_lower = lower_dict(clean_dict_genre)
+
 
 
 # # avoir la liste avec les id de tout les films dasn tel catagegoris puis tirer au hhasrad un id 
 
 
 
-def choice_genre ():
+def choice_genre ():   # demande a l utilisateur le genre de film voulu
 
     for key in clean_genre_dict_lower :
         print(key)
@@ -98,9 +98,9 @@ def choice_genre ():
         print(" Genre non trouver dans la liste , erreur lors de la saisie : recommancer ")
         
 
-id =choice_genre()
 
-def display_selection_movie (id):
+
+def display_selection_movie (id):  # affiche la premiere page de selection  du genre de film choisis
 
      headers = {
     "accept": "application/json",
@@ -118,31 +118,39 @@ def display_selection_movie (id):
 
 
 
-dict_movie_selection = display_selection_movie(id)
 
-number_total_of_page = dict_movie_selection["total_results"]
-
-print(number_total_of_page)
-print(dict_movie_selection)
-
-
-# def random_movie(nbr_p):
+def random_movie(nbr_p):
      
-#     headers = {
-#     "accept": "application/json",
-#     "Authorization": f"Bearer {api_key}" } 
+    headers = {
+    "accept": "application/json",
+    "Authorization": f"Bearer {api_key}" } 
 
-#     random_page= random.randint(1, nbr_p)
-#     url = f"https://api.themoviedb.org/3/discover/movie?with_genres={id}&language=fr-FR&page={random_page}"
-#     responses = requests.get(url, headers=headers)
+    random_page= random.randint(1, 500)
 
-#     responses = responses.json()
-#     dict_movie = responses
+    url = f"https://api.themoviedb.org/3/discover/movie?with_genres={id}&language=fr-FR&page={random_page}"
+    responses = requests.get(url, headers=headers)
 
-#     random_ = random.randint(1, len(dict_movie))
-#     selection = list(dict_movie.values())[random_ - 1]
-#     return selection
+    responses = responses.json()
+    dict_movie = responses
+    list_movie= dict_movie['results']
+    random_number = random.randint(0, 19)
+    final_movie = list_movie[random_number]
+    
+    return final_movie
+
+    # random_ = random.randint(1, len(dict_movie))
+    # selection = list(dict_movie.values())[random_ - 1]
+    # return selection
  
-# print(random_movie(number_total_of_page))
+version_1_dict = dict_movie_genre_id()
+clean_dict_genre = clean_dict(version_1_dict)
+clean_genre_dict_lower = lower_dict(clean_dict_genre)
+id =choice_genre()
+dict_movie_selection = display_selection_movie(id)
+number_total_of_page = dict_movie_selection["total_results"]
+print(number_total_of_page)
+print(random_movie(number_total_of_page))
+
+
 
 
