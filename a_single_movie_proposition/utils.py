@@ -77,8 +77,6 @@ def lower_dict(d):
 
 
 
-# # avoir la liste avec les id de tout les films dasn tel catagegoris puis tirer au hhasrad un id 
-
 
 
 def choice_genre ():   # demande a l utilisateur le genre de film voulu
@@ -86,6 +84,7 @@ def choice_genre ():   # demande a l utilisateur le genre de film voulu
     for key in clean_genre_dict_lower :
         print(key)
         print("\n")
+
     choice_genre = input("write the type of movie you want to watch : \n ")
 
     # permet de determiner le numero du genre (id)
@@ -144,12 +143,19 @@ def random_movie(nbr_p):
  
 version_1_dict = dict_movie_genre_id()
 clean_dict_genre = clean_dict(version_1_dict)
-clean_genre_dict_lower = lower_dict(clean_dict_genre)
-id =choice_genre()
-dict_movie_selection = display_selection_movie(id)
-number_total_of_page = dict_movie_selection["total_results"]
-print(number_total_of_page)
-print(random_movie(number_total_of_page))
+
+def retrieve_dict_genre ():
+    return clean_dict_genre
+
+
+ 
+# clean_genre_dict_lower = lower_dict(clean_dict_genre)
+# id =choice_genre()
+# dict_movie_selection = display_selection_movie(id)
+# number_total_of_page = dict_movie_selection["total_results"]
+# print(number_total_of_page)
+# print(random_movie(number_total_of_page))
+
 
 
 
